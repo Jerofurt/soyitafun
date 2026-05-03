@@ -27,6 +27,10 @@ export default async function AdminDashboard() {
     .from('hospedagens')
     .select('*', { count: 'exact', head: true })
 
+  const { count: atividadesCount } = await supabase
+    .from('atividades')
+    .select('*', { count: 'exact', head: true })
+
   return (
     <main className="min-h-screen bg-fondo-base">
       <header className="bg-fondo-card border-b border-texto-secundario/10">
@@ -74,7 +78,11 @@ export default async function AdminDashboard() {
               title="Hospedagens"
               count={hospedagensCount ?? 0}
             />
-            <DashboardLink href="#" title="Atividades" count={0} disabled />
+            <DashboardLink
+              href="/admin/atividades"
+              title="Atividades"
+              count={atividadesCount ?? 0}
+            />
             <DashboardLink href="#" title="Comércios" count={0} disabled />
             <DashboardLink href="#" title="Serviços" count={0} disabled />
           </div>
