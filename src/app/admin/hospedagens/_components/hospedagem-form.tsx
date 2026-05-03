@@ -20,6 +20,7 @@ import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { PhotoUploader } from './photo-uploader'
 
 const COMODIDADES = [
   'wifi',
@@ -111,6 +112,9 @@ export function HospedagemForm(props: Props) {
     initial?.data_vencimento ?? '',
   )
   const [vencimentoTouched, setVencimentoTouched] = useState(mode === 'edit')
+
+  // Photo uploader signals when an upload is in flight; we block submit until done.
+  const [photosUploading, setPhotosUploading] = useState(false)
 
   // Slug auto-gen from nome (create mode only, until user edits slug manually)
   useEffect(() => {
@@ -366,22 +370,11 @@ export function HospedagemForm(props: Props) {
             </Section>
 
             <Section title="Fotos">
-              {/* Hidden inputs preserving existing photos until uploader lands */}
-              {(initial?.fotos ?? []).map((p) => (
-                <input key={p} type="hidden" name="fotos" value={p} />
-              ))}
-              <div className="bg-fondo-base/60 border border-dashed border-texto-secundario/25 rounded-sm px-8 py-12 text-center">
-                <p className="text-sm text-texto-secundario">
-                  Upload de fotos será habilitado no próximo commit deste
-                  sprint.
-                </p>
-                {initial?.fotos && initial.fotos.length > 0 && (
-                  <p className="text-xs text-texto-secundario/70 mt-2">
-                    {initial.fotos.length}{' '}
-                    {initial.fotos.length === 1 ? 'foto preservada' : 'fotos preservadas'}
-                  </p>
-                )}
-              </div>
+              <PhotoUploader
+                hospedagemId={hospedagemId}
+                initialPhotos={initial?.fotos ?? []}
+                onUploadingChange={setPhotosUploading}
+              />
             </Section>
 
             <Section title="Plano e vigência">
@@ -474,12 +467,18 @@ export function HospedagemForm(props: Props) {
           >
             ← Cancelar
           </Link>
-          <Button type="submit" size="lg" disabled={isPending}>
-            {isPending
-              ? 'Salvando…'
-              : mode === 'create'
-                ? 'Criar hospedagem'
-                : 'Salvar alterações'}
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isPending || photosUploading}
+          >
+            {photosUploading
+              ? 'Aguardando uploads…'
+              : isPending
+                ? 'Salvando…'
+                : mode === 'create'
+                  ? 'Criar hospedagem'
+                  : 'Salvar alterações'}
           </Button>
         </div>
       </form>
