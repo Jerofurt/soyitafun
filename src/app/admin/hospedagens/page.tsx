@@ -1,6 +1,9 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Filters } from './filters'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type Hospedagem = {
   id: string
@@ -23,23 +26,13 @@ const PLANO_LABELS: Record<string, string> = {
   anual: 'Anual',
 }
 
-const STATUS_STYLES: Record<string, { label: string; classes: string }> = {
-  ativo: {
-    label: 'Ativo',
-    classes: 'bg-emerald-100 text-emerald-800 ring-emerald-200',
-  },
-  pausado: {
-    label: 'Pausado',
-    classes: 'bg-stone-100 text-stone-700 ring-stone-200',
-  },
-  pendente: {
-    label: 'Pendente',
-    classes: 'bg-amber-100 text-amber-800 ring-amber-200',
-  },
-  vencido: {
-    label: 'Vencido',
-    classes: 'bg-red-100 text-red-800 ring-red-200',
-  },
+type StatusVariant = 'success' | 'neutral' | 'warning' | 'error'
+
+const STATUS_BADGE: Record<string, { label: string; variant: StatusVariant }> = {
+  ativo: { label: 'Ativo', variant: 'success' },
+  pausado: { label: 'Pausado', variant: 'neutral' },
+  pendente: { label: 'Pendente', variant: 'warning' },
+  vencido: { label: 'Vencido', variant: 'error' },
 }
 
 function formatDate(iso: string | null): string {
@@ -76,38 +69,38 @@ export default async function HospedagensListPage({
   const filtered = Boolean(zona || status)
 
   return (
-    <main className="min-h-screen bg-stone-50">
-      <header className="bg-white border-b border-stone-200">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <main className="min-h-screen bg-fondo-base">
+      <header className="bg-fondo-card border-b border-texto-secundario/10">
+        <div className="max-w-6xl mx-auto px-8 py-6 flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-3 text-sm text-stone-500">
-              <Link href="/admin" className="hover:text-stone-900">
-                ← Painel
-              </Link>
-            </div>
-            <h1 className="text-xl font-bold text-stone-900 mt-1">Hospedagens</h1>
-            <p className="text-xs text-stone-500">
+            <Link
+              href="/admin"
+              className="text-[11px] uppercase tracking-wider text-texto-secundario hover:text-texto-principal transition-colors duration-200"
+            >
+              ← Painel
+            </Link>
+            <h1 className="text-2xl text-texto-principal mt-2">Hospedagens</h1>
+            <p className="text-xs text-texto-secundario mt-1">
               {rows.length} {rows.length === 1 ? 'cadastrada' : 'cadastradas'}
-              {filtered && ' (filtradas)'}
+              {filtered && ' · filtradas'}
             </p>
           </div>
-          <Link
-            href="/admin/hospedagens/nova"
-            className="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800 transition-colors"
-          >
-            + Nova hospedagem
+          <Link href="/admin/hospedagens/nova">
+            <Button>+ Nova hospedagem</Button>
           </Link>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-4">
+      <div className="max-w-6xl mx-auto px-8 py-12 space-y-6">
         <Filters zona={zona} status={status} />
 
         {error ? (
-          <div className="bg-red-50 border border-red-200 rounded-md p-4 text-red-700">
-            <p className="font-semibold">Erro ao carregar hospedagens</p>
-            <p className="text-sm mt-1">{error.message}</p>
-          </div>
+          <Card>
+            <div className="px-8 py-6 text-error">
+              <p className="font-medium">Erro ao carregar hospedagens</p>
+              <p className="text-sm mt-1">{error.message}</p>
+            </div>
+          </Card>
         ) : rows.length === 0 ? (
           <EmptyState filtered={filtered} />
         ) : (
@@ -120,63 +113,66 @@ export default async function HospedagensListPage({
 
 function HospedagensTable({ rows }: { rows: Hospedagem[] }) {
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <Card className="overflow-hidden">
       <table className="w-full">
-        <thead className="bg-stone-50 border-b border-stone-200">
-          <tr className="text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-            <th className="px-4 py-3 w-20">Foto</th>
-            <th className="px-4 py-3">Nome</th>
-            <th className="px-4 py-3">Zona</th>
-            <th className="px-4 py-3">Plano</th>
-            <th className="px-4 py-3">Status</th>
-            <th className="px-4 py-3">Vencimento</th>
-            <th className="px-4 py-3 w-24 text-right">Ações</th>
+        <thead className="bg-fondo-base/40 border-b border-texto-secundario/10">
+          <tr className="text-left text-[10px] font-medium uppercase tracking-wider text-texto-secundario">
+            <th className="px-6 py-4 w-20">Foto</th>
+            <th className="px-6 py-4">Nome</th>
+            <th className="px-6 py-4">Zona</th>
+            <th className="px-6 py-4">Plano</th>
+            <th className="px-6 py-4">Status</th>
+            <th className="px-6 py-4">Vencimento</th>
+            <th className="px-6 py-4 w-24 text-right">Ações</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-stone-100">
+        <tbody className="divide-y divide-texto-secundario/10">
           {rows.map((h) => {
             const thumb = h.fotos?.[0]
-            const statusStyle = STATUS_STYLES[h.status] ?? STATUS_STYLES.pendente
+            const status = STATUS_BADGE[h.status] ?? STATUS_BADGE.pendente
             return (
-              <tr key={h.id} className="hover:bg-stone-50">
-                <td className="px-4 py-3">
+              <tr
+                key={h.id}
+                className="transition-colors duration-200 hover:bg-fondo-base/40"
+              >
+                <td className="px-6 py-4">
                   {thumb ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={buildPhotoUrl(thumb)}
                       alt={h.nome}
-                      className="w-14 h-14 rounded object-cover bg-stone-100"
+                      className="w-14 h-14 rounded-sm object-cover"
                     />
                   ) : (
-                    <div className="w-14 h-14 rounded bg-stone-100 flex items-center justify-center text-stone-400 text-[10px] text-center px-1">
+                    <div className="w-14 h-14 rounded-sm bg-fondo-base/60 border border-texto-secundario/15 flex items-center justify-center text-texto-secundario/60 text-[9px] uppercase tracking-wider text-center px-1">
                       sem foto
                     </div>
                   )}
                 </td>
-                <td className="px-4 py-3">
-                  <div className="font-medium text-stone-900">{h.nome}</div>
-                  <div className="text-xs text-stone-500">/{h.slug}</div>
+                <td className="px-6 py-4">
+                  <div className="font-medium text-texto-principal">
+                    {h.nome}
+                  </div>
+                  <div className="text-xs text-texto-secundario font-mono mt-0.5">
+                    /{h.slug}
+                  </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-stone-700">
+                <td className="px-6 py-4 text-sm text-texto-principal">
                   {ZONA_LABELS[h.zona] ?? h.zona}
                 </td>
-                <td className="px-4 py-3 text-sm text-stone-700">
+                <td className="px-6 py-4 text-sm text-texto-principal">
                   {PLANO_LABELS[h.plano] ?? h.plano}
                 </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${statusStyle.classes}`}
-                  >
-                    {statusStyle.label}
-                  </span>
+                <td className="px-6 py-4">
+                  <Badge variant={status.variant}>{status.label}</Badge>
                 </td>
-                <td className="px-4 py-3 text-sm text-stone-700">
+                <td className="px-6 py-4 text-sm text-texto-principal">
                   {formatDate(h.data_vencimento)}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-6 py-4 text-right">
                   <Link
                     href={`/admin/hospedagens/${h.id}/editar`}
-                    className="text-sm text-emerald-700 hover:text-emerald-800 font-medium"
+                    className="text-sm text-acento-mar hover:text-acento-mar/70 transition-colors duration-200 font-medium"
                   >
                     Editar
                   </Link>
@@ -186,29 +182,28 @@ function HospedagensTable({ rows }: { rows: Hospedagem[] }) {
           })}
         </tbody>
       </table>
-    </div>
+    </Card>
   )
 }
 
 function EmptyState({ filtered }: { filtered: boolean }) {
   return (
-    <div className="bg-white rounded-lg shadow p-12 text-center">
-      <h2 className="text-lg font-semibold text-stone-900">
-        {filtered ? 'Nenhuma hospedagem encontrada' : 'Ainda não há hospedagens'}
-      </h2>
-      <p className="text-stone-600 mt-2 mb-6">
-        {filtered
-          ? 'Tente ajustar os filtros para ver mais resultados.'
-          : 'Cadastre a primeira hospedagem para começar.'}
-      </p>
-      {!filtered && (
-        <Link
-          href="/admin/hospedagens/nova"
-          className="inline-block bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800 transition-colors"
-        >
-          + Nova hospedagem
-        </Link>
-      )}
-    </div>
+    <Card>
+      <div className="px-8 py-16 text-center">
+        <h2 className="text-2xl text-texto-principal">
+          {filtered ? 'Nenhuma hospedagem encontrada' : 'Ainda não há hospedagens'}
+        </h2>
+        <p className="text-sm text-texto-secundario mt-3 mb-8 max-w-md mx-auto leading-relaxed">
+          {filtered
+            ? 'Tente ajustar os filtros para ver mais resultados.'
+            : 'Cadastre a primeira hospedagem para começar a popular o portal.'}
+        </p>
+        {!filtered && (
+          <Link href="/admin/hospedagens/nova">
+            <Button>+ Nova hospedagem</Button>
+          </Link>
+        )}
+      </div>
+    </Card>
   )
 }

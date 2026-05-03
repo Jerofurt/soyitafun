@@ -1,4 +1,8 @@
 import { login } from './actions'
+import { Card, CardBody } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 
 export default async function LoginPage({
   searchParams,
@@ -8,65 +12,54 @@ export default async function LoginPage({
   const params = await searchParams
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-stone-50 p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-stone-900">soyitafun</h1>
-            <p className="text-stone-600 mt-2">Painel de administração</p>
-          </div>
-
-          <form action={login} className="space-y-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-stone-700 mb-1"
-              >
-                E-mail
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder="seu@email.com"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-stone-700 mb-1"
-              >
-                Senha
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder="••••••••"
-              />
-            </div>
-
-            {params.error && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-700">
-                {params.error === 'invalid_credentials'
-                  ? 'E-mail ou senha incorretos.'
-                  : 'Erro ao fazer login. Tente novamente.'}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              className="w-full bg-emerald-700 text-white py-2 px-4 rounded-md hover:bg-emerald-800 transition-colors font-medium"
-            >
-              Entrar
-            </button>
-          </form>
+    <main className="min-h-screen flex items-center justify-center bg-fondo-base px-8 py-12">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-3">
+          <p className="text-[11px] uppercase tracking-[0.25em] text-acento-dourado font-medium">
+            Painel administrativo
+          </p>
+          <h1 className="text-4xl text-texto-principal">soyitafun</h1>
         </div>
+
+        <Card>
+          <CardBody>
+            <form action={login} className="space-y-6">
+              <div>
+                <Label htmlFor="email">E-mail</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="seu@email.com"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="password">Senha</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                />
+              </div>
+
+              {params.error && (
+                <div className="bg-error/10 border border-error/20 rounded-sm px-4 py-3 text-sm text-error">
+                  {params.error === 'invalid_credentials'
+                    ? 'E-mail ou senha incorretos.'
+                    : 'Erro ao fazer login. Tente novamente.'}
+                </div>
+              )}
+
+              <Button type="submit" size="lg" className="w-full">
+                Entrar
+              </Button>
+            </form>
+          </CardBody>
+        </Card>
       </div>
     </main>
   )

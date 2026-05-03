@@ -1,40 +1,57 @@
 import { createClient } from '@/lib/supabase/server'
+import { Card, CardBody } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 export default async function Home() {
   const supabase = await createClient()
-  
+
   const { data: hospedagens, error } = await supabase
     .from('hospedagens')
     .select('id, nome')
     .limit(5)
 
   return (
-    <main className="min-h-screen p-8 bg-stone-50">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-stone-900 mb-4">
-          soyitafun
-        </h1>
-        <p className="text-lg text-stone-600 mb-8">
-          Portal de Itamambuca — em construção
-        </p>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Test de conexão Supabase</h2>
-          
-          {error ? (
-            <div className="text-red-600">
-              <p className="font-semibold">❌ Erro de conexão:</p>
-              <pre className="mt-2 text-sm bg-red-50 p-2 rounded">{error.message}</pre>
-            </div>
-          ) : (
-            <div className="text-green-700">
-              <p className="font-semibold">✅ Conectado a Supabase</p>
-              <p className="text-sm text-stone-600 mt-2">
-                Hospedagens cadastradas: {hospedagens?.length || 0}
-              </p>
-            </div>
-          )}
+    <main className="min-h-screen flex flex-col items-center justify-center bg-fondo-base px-8 py-16">
+      <div className="max-w-2xl w-full text-center space-y-12">
+        <div className="space-y-5">
+          <p className="text-[11px] uppercase tracking-[0.25em] text-acento-dourado font-medium">
+            Portal de Itamambuca
+          </p>
+          <h1 className="text-5xl md:text-6xl text-texto-principal">
+            soyitafun
+          </h1>
+          <p className="text-base text-texto-secundario max-w-md mx-auto leading-relaxed">
+            Hospedagens, atividades, comércios e serviços em uma das praias mais
+            preservadas do litoral norte de São Paulo.
+          </p>
         </div>
+
+        <Card>
+          <CardBody className="text-left space-y-4">
+            <p className="text-[11px] uppercase tracking-wider text-texto-secundario font-medium">
+              Status do sistema
+            </p>
+            {error ? (
+              <div className="space-y-3">
+                <Badge variant="error">Erro de conexão</Badge>
+                <pre className="text-xs bg-fondo-base p-3 rounded-sm border border-error/20 text-error overflow-x-auto">
+                  {error.message}
+                </pre>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Badge variant="success">Conectado</Badge>
+                <span className="text-sm text-texto-secundario">
+                  {hospedagens?.length ?? 0} hospedagens cadastradas
+                </span>
+              </div>
+            )}
+          </CardBody>
+        </Card>
+
+        <p className="text-xs text-texto-secundario/70 uppercase tracking-wider">
+          Em construção
+        </p>
       </div>
     </main>
   )

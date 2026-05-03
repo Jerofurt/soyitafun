@@ -1,6 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { logout } from './login/actions'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -20,50 +24,55 @@ export default async function AdminDashboard() {
     .single()
 
   return (
-    <main className="min-h-screen bg-stone-50">
-      <header className="bg-white border-b border-stone-200">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <main className="min-h-screen bg-fondo-base">
+      <header className="bg-fondo-card border-b border-texto-secundario/10">
+        <div className="max-w-6xl mx-auto px-8 py-6 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-stone-900">soyitafun</h1>
-            <p className="text-xs text-stone-500">Painel de administração</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-acento-dourado font-medium mb-1">
+              Painel administrativo
+            </p>
+            <h1 className="text-2xl text-texto-principal">soyitafun</h1>
           </div>
-
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="text-sm font-medium text-stone-900">
-                {profile?.email}
-              </p>
-              <p className="text-xs text-stone-500 capitalize">
+              <p className="text-sm text-texto-principal">{profile?.email}</p>
+              <p className="text-xs text-texto-secundario capitalize">
                 {profile?.role?.replace('_', ' ')}
               </p>
             </div>
             <form action={logout}>
-              <button
-                type="submit"
-                className="text-sm text-stone-600 hover:text-stone-900 px-3 py-1 border border-stone-300 rounded-md hover:bg-stone-100 transition-colors"
-              >
+              <Button type="submit" variant="ghost" size="sm">
                 Sair
-              </button>
+              </Button>
             </form>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-8">
-          <h2 className="text-2xl font-bold text-stone-900 mb-2">
-            Bem-vindo, {profile?.nome || profile?.email}
-          </h2>
-          <p className="text-stone-600 mb-8">
-            Painel em construção. Os módulos de hospedagens, atividades, comércios e serviços
-            serão habilitados em breve.
-          </p>
+      <div className="max-w-6xl mx-auto px-8 py-16">
+        <div className="space-y-12">
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-texto-secundario font-medium mb-2">
+              Bem-vindo de volta
+            </p>
+            <h2 className="text-3xl text-texto-principal">
+              {profile?.nome || 'Admin'}
+            </h2>
+            <p className="text-sm text-texto-secundario mt-3 max-w-xl leading-relaxed">
+              Gerencie as hospedagens, atividades, comércios e serviços de
+              Itamambuca a partir deste painel.
+            </p>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <DashboardCard title="Hospedagens" count={0} />
-            <DashboardCard title="Atividades" count={0} />
-            <DashboardCard title="Comércios" count={0} />
-            <DashboardCard title="Serviços" count={0} />
+            <DashboardLink
+              href="/admin/hospedagens"
+              title="Hospedagens"
+              count={null}
+            />
+            <DashboardLink href="#" title="Atividades" count={0} disabled />
+            <DashboardLink href="#" title="Comércios" count={0} disabled />
+            <DashboardLink href="#" title="Serviços" count={0} disabled />
           </div>
         </div>
       </div>
@@ -71,11 +80,37 @@ export default async function AdminDashboard() {
   )
 }
 
-function DashboardCard({ title, count }: { title: string; count: number }) {
-  return (
-    <div className="bg-stone-50 border border-stone-200 rounded-lg p-4">
-      <p className="text-sm text-stone-600">{title}</p>
-      <p className="text-2xl font-bold text-stone-900 mt-1">{count}</p>
-    </div>
+function DashboardLink({
+  href,
+  title,
+  count,
+  disabled,
+}: {
+  href: string
+  title: string
+  count: number | null
+  disabled?: boolean
+}) {
+  const card = (
+    <Card
+      className={cn(
+        'transition-all duration-200',
+        disabled
+          ? 'opacity-50'
+          : 'hover:border-acento-mar/30 hover:shadow-md cursor-pointer',
+      )}
+    >
+      <div className="px-6 py-6">
+        <p className="text-[11px] uppercase tracking-wider text-texto-secundario font-medium">
+          {title}
+        </p>
+        <p className="text-3xl font-display text-texto-principal mt-3">
+          {count === null ? '—' : count}
+        </p>
+      </div>
+    </Card>
   )
+
+  if (disabled) return card
+  return <Link href={href}>{card}</Link>
 }

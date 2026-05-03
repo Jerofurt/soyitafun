@@ -1,6 +1,8 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Card } from '@/components/ui/card'
+import { Select } from '@/components/ui/select'
 
 type Props = {
   zona: string
@@ -26,39 +28,48 @@ export function Filters({ zona, status }: Props) {
   const hasFilters = Boolean(zona || status)
 
   return (
-    <div className="flex flex-wrap items-center gap-3 bg-white rounded-lg shadow p-4">
-      <span className="text-sm font-medium text-stone-700">Filtrar:</span>
+    <Card>
+      <div className="px-6 py-4 flex flex-wrap items-center gap-4">
+        <span className="text-[11px] uppercase tracking-wider font-medium text-texto-secundario">
+          Filtrar
+        </span>
 
-      <select
-        value={zona}
-        onChange={(e) => update('zona', e.target.value)}
-        className="text-sm border border-stone-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-      >
-        <option value="">Todas as zonas</option>
-        <option value="vila">Vila</option>
-        <option value="condominio">Condomínio</option>
-      </select>
+        <div className="min-w-[200px]">
+          <Select
+            value={zona}
+            onChange={(e) => update('zona', e.target.value)}
+            aria-label="Filtrar por zona"
+          >
+            <option value="">Todas as zonas</option>
+            <option value="vila">Vila</option>
+            <option value="condominio">Condomínio</option>
+          </Select>
+        </div>
 
-      <select
-        value={status}
-        onChange={(e) => update('status', e.target.value)}
-        className="text-sm border border-stone-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-      >
-        <option value="">Todos os status</option>
-        <option value="ativo">Ativo</option>
-        <option value="pausado">Pausado</option>
-        <option value="pendente">Pendente</option>
-        <option value="vencido">Vencido</option>
-      </select>
+        <div className="min-w-[200px]">
+          <Select
+            value={status}
+            onChange={(e) => update('status', e.target.value)}
+            aria-label="Filtrar por status"
+          >
+            <option value="">Todos os status</option>
+            <option value="ativo">Ativo</option>
+            <option value="pausado">Pausado</option>
+            <option value="pendente">Pendente</option>
+            <option value="vencido">Vencido</option>
+          </Select>
+        </div>
 
-      {hasFilters && (
-        <button
-          onClick={() => router.push(pathname)}
-          className="text-sm text-stone-600 hover:text-stone-900 underline"
-        >
-          Limpar filtros
-        </button>
-      )}
-    </div>
+        {hasFilters && (
+          <button
+            type="button"
+            onClick={() => router.push(pathname)}
+            className="text-[11px] uppercase tracking-wider text-texto-secundario hover:text-texto-principal transition-colors duration-200"
+          >
+            Limpar filtros
+          </button>
+        )}
+      </div>
+    </Card>
   )
 }
