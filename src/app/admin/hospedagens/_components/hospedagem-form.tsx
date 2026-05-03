@@ -20,7 +20,7 @@ import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { PhotoUploader } from './photo-uploader'
+import { PhotoUploader } from '@/components/uploaders/photo-uploader'
 
 const COMODIDADES = [
   'wifi',
@@ -371,7 +371,8 @@ export function HospedagemForm(props: Props) {
 
             <Section title="Fotos">
               <PhotoUploader
-                hospedagemId={hospedagemId}
+                bucket="hospedagens"
+                folderPrefix={hospedagemId}
                 initialPhotos={initial?.fotos ?? []}
                 onUploadingChange={setPhotosUploading}
               />

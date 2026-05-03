@@ -4,11 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 
-const BUCKET = 'hospedagens'
-
-function buildPhotoUrl(path: string): string {
+function buildPhotoUrl(bucket: string, path: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  return `${base}/storage/v1/object/public/${BUCKET}/${path}`
+  return `${base}/storage/v1/object/public/${bucket}/${path}`
 }
 
 type ExistingItem = {
@@ -31,13 +29,24 @@ type NewItem = {
 type Item = ExistingItem | NewItem
 
 type Props = {
-  hospedagemId: string
+  /**
+   * Storage bucket where photos are uploaded. Default 'hospedagens' kept for
+   * backwards compatibility with the original (single-domain) call site.
+   */
+  bucket?: string
+  /**
+   * Folder prefix inside the bucket. Each domain row should pass its own id
+   * (or a stable pre-generated uuid for not-yet-persisted rows) so photos
+   * are grouped per row and bulk-deletable.
+   */
+  folderPrefix: string
   initialPhotos: string[]
   onUploadingChange?: (isUploading: boolean) => void
 }
 
 export function PhotoUploader({
-  hospedagemId,
+  bucket = 'hospedagens',
+  folderPrefix,
   initialPhotos,
   onUploadingChange,
 }: Props) {
@@ -72,10 +81,10 @@ export function PhotoUploader({
   async function uploadOne(itemId: string, file: File) {
     const supabase = createClient()
     const ext = (file.name.split('.').pop() ?? 'bin').toLowerCase()
-    const path = `${hospedagemId}/${crypto.randomUUID()}.${ext}`
+    const path = `${folderPrefix}/${crypto.randomUUID()}.${ext}`
 
     const { error } = await supabase.storage
-      .from(BUCKET)
+      .from(bucket)
       .upload(path, file, { contentType: file.type, upsert: false })
 
     setItems((prev) =>
@@ -178,6 +187,7 @@ export function PhotoUploader({
             <PhotoCard
               key={it.id}
               item={it}
+              bucket={bucket}
               onRemove={() => removeItem(it.id)}
               onRetry={() => retryUpload(it.id)}
             />
@@ -190,15 +200,19 @@ export function PhotoUploader({
 
 function PhotoCard({
   item,
+  bucket,
   onRemove,
   onRetry,
 }: {
   item: Item
+  bucket: string
   onRemove: () => void
   onRetry: () => void
 }) {
   const src =
-    item.kind === 'existing' ? buildPhotoUrl(item.path) : item.previewUrl
+    item.kind === 'existing'
+      ? buildPhotoUrl(bucket, item.path)
+      : item.previewUrl
 
   return (
     <div className="relative aspect-square rounded-sm overflow-hidden bg-fondo-base/60 border border-texto-secundario/15 group">
