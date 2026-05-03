@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, slugify } from '@/lib/utils'
 import { PhotoUploader } from '@/components/uploaders/photo-uploader'
 
 const COMODIDADES = [
@@ -38,15 +38,6 @@ const COMODIDADES = [
   'pet friendly',
   'café da manhã',
 ] as const
-
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
 
 function addDays(isoDate: string, days: number): string {
   const [y, m, d] = isoDate.split('-').map(Number)

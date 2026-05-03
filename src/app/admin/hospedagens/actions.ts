@@ -3,21 +3,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { slugify } from '@/lib/utils'
 
 export type ActionState = { error: string | null }
 
 const VALID_ZONAS = ['vila', 'condominio'] as const
 const VALID_PLANOS = ['mensal', 'anual'] as const
 const VALID_STATUS = ['ativo', 'pausado', 'pendente', 'vencido'] as const
-
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
 
 function parseString(v: FormDataEntryValue | null): string | null {
   if (v === null) return null
