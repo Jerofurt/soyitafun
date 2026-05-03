@@ -23,6 +23,10 @@ export default async function AdminDashboard() {
     .eq('id', user.id)
     .single()
 
+  const { count: hospedagensCount } = await supabase
+    .from('hospedagens')
+    .select('*', { count: 'exact', head: true })
+
   return (
     <main className="min-h-screen bg-fondo-base">
       <header className="bg-fondo-card border-b border-texto-secundario/10">
@@ -68,7 +72,7 @@ export default async function AdminDashboard() {
             <DashboardLink
               href="/admin/hospedagens"
               title="Hospedagens"
-              count={null}
+              count={hospedagensCount ?? 0}
             />
             <DashboardLink href="#" title="Atividades" count={0} disabled />
             <DashboardLink href="#" title="Comércios" count={0} disabled />
@@ -94,10 +98,10 @@ function DashboardLink({
   const card = (
     <Card
       className={cn(
-        'transition-all duration-200',
+        'transition-all duration-200 ease-out',
         disabled
           ? 'opacity-50'
-          : 'hover:border-acento-mar/30 hover:shadow-md cursor-pointer',
+          : 'cursor-pointer hover:border-acento-mar/30 hover:shadow-md hover:-translate-y-0.5',
       )}
     >
       <div className="px-6 py-6">
