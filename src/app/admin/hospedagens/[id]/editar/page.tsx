@@ -20,7 +20,7 @@ export default async function EditarHospedagemPage({
   const { data, error } = await supabase
     .from('hospedagens')
     .select(
-      'id, slug, nome, zona, descricao, fotos, capacidade, quartos, banheiros, comodidades, preco_diaria_baixa, preco_diaria_alta, whatsapp, email, endereco, lat, lng, plano, status, data_inicio, data_vencimento, destaque',
+      'id, slug, nome, zona, descricao, fotos, capacidade, quartos, banheiros, comodidades, preco_diaria_baixa, preco_diaria_alta, whatsapp, email, instagram, endereco, lat, lng, plano, status, data_inicio, data_vencimento, destaque',
     )
     .eq('id', id)
     .single()

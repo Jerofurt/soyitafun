@@ -64,6 +64,7 @@ export type HospedagemInitial = {
   endereco: string | null
   lat: number | null
   lng: number | null
+  instagram: string | null
   plano: string
   status: string
   data_inicio: string | null
@@ -347,6 +348,18 @@ export function HospedagemForm(props: Props) {
                   type="tel"
                   defaultValue={initial?.whatsapp ?? ''}
                   placeholder="5512999999999"
+                />
+              </Field>
+              <Field
+                label="Instagram"
+                htmlFor="instagram"
+                hint="Sem @, apenas o nome de usuário"
+              >
+                <Input
+                  id="instagram"
+                  name="instagram"
+                  defaultValue={initial?.instagram ?? ''}
+                  placeholder="pousadanome"
                 />
               </Field>
               <Field label="E-mail" htmlFor="email">

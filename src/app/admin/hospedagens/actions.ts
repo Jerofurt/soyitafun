@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { slugify } from '@/lib/utils'
+import { sanitizeInstagramHandle, slugify } from '@/lib/utils'
 
 export type ActionState = { error: string | null }
 
@@ -60,6 +60,7 @@ type Payload = {
   endereco: string | null
   lat: number | null
   lng: number | null
+  instagram: string | null
   plano: string
   status: string
   data_inicio: string | null
@@ -119,6 +120,7 @@ function parseFormData(formData: FormData): ParseResult {
       endereco: parseString(formData.get('endereco')),
       lat: parseNumber(formData.get('lat')),
       lng: parseNumber(formData.get('lng')),
+      instagram: sanitizeInstagramHandle(parseString(formData.get('instagram'))),
       plano,
       status,
       data_inicio: parseDate(formData.get('data_inicio')),
