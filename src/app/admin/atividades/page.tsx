@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Filters } from './filters'
-import { AtivoToggle } from './_components/ativo-toggle'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type Atividade = {
   id: string
@@ -12,8 +12,9 @@ type Atividade = {
   tipo: string
   duracao_horas: number | null
   preco: number | null
-  comissao_percent: number | null
-  ativo: boolean
+  plano: string
+  status: string
+  data_vencimento: string | null
   fotos: string[] | null
 }
 
@@ -23,6 +24,20 @@ const TIPO_LABELS: Record<string, string> = {
   surf: 'Surf',
   caminhada: 'Caminhada',
   outro: 'Outro',
+}
+
+const PLANO_LABELS: Record<string, string> = {
+  mensal: 'Mensal',
+  anual: 'Anual',
+}
+
+type StatusVariant = 'success' | 'neutral' | 'warning' | 'error'
+
+const STATUS_BADGE: Record<string, { label: string; variant: StatusVariant }> = {
+  ativo: { label: 'Ativo', variant: 'success' },
+  pausado: { label: 'Pausado', variant: 'neutral' },
+  pendente: { label: 'Pendente', variant: 'warning' },
+  vencido: { label: 'Vencido', variant: 'error' },
 }
 
 const PRECO_FORMATTER = new Intl.NumberFormat('pt-BR', {
@@ -40,9 +55,10 @@ function formatPreco(v: number | null): string {
   return PRECO_FORMATTER.format(v)
 }
 
-function formatPercent(v: number | null): string {
-  if (v === null) return '—'
-  return `${v.toString().replace('.', ',')}%`
+function formatDate(iso: string | null): string {
+  if (!iso) return '—'
+  const [y, m, d] = iso.split('-')
+  return `${d}/${m}/${y}`
 }
 
 function buildPhotoUrl(path: string): string {
@@ -53,27 +69,26 @@ function buildPhotoUrl(path: string): string {
 export default async function AtividadesListPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tipo?: string; ativo?: string }>
+  searchParams: Promise<{ tipo?: string; status?: string }>
 }) {
   const params = await searchParams
   const tipo = params.tipo ?? ''
-  const ativoFilter = params.ativo ?? ''
+  const status = params.status ?? ''
 
   const supabase = await createClient()
   let query = supabase
     .from('atividades')
     .select(
-      'id, slug, nome, tipo, duracao_horas, preco, comissao_percent, ativo, fotos',
+      'id, slug, nome, tipo, duracao_horas, preco, plano, status, data_vencimento, fotos',
     )
     .order('created_at', { ascending: false })
 
   if (tipo) query = query.eq('tipo', tipo)
-  if (ativoFilter === 'true') query = query.eq('ativo', true)
-  if (ativoFilter === 'false') query = query.eq('ativo', false)
+  if (status) query = query.eq('status', status)
 
   const { data, error } = await query
   const rows = (data ?? []) as Atividade[]
-  const filtered = Boolean(tipo || ativoFilter)
+  const filtered = Boolean(tipo || status)
 
   return (
     <main className="min-h-screen bg-fondo-base">
@@ -99,7 +114,7 @@ export default async function AtividadesListPage({
       </header>
 
       <div className="max-w-6xl mx-auto px-8 py-12 space-y-6">
-        <Filters tipo={tipo} ativo={ativoFilter} />
+        <Filters tipo={tipo} status={status} />
 
         {error ? (
           <Card>
@@ -129,14 +144,16 @@ function AtividadesTable({ rows }: { rows: Atividade[] }) {
             <th className="px-6 py-4">Tipo</th>
             <th className="px-6 py-4">Duração</th>
             <th className="px-6 py-4">Preço</th>
-            <th className="px-6 py-4">Comissão</th>
-            <th className="px-6 py-4">Ativo</th>
+            <th className="px-6 py-4">Plano</th>
+            <th className="px-6 py-4">Status</th>
+            <th className="px-6 py-4">Vencimento</th>
             <th className="px-6 py-4 w-24 text-right">Ações</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-texto-secundario/10">
           {rows.map((a) => {
             const thumb = a.fotos?.[0]
+            const status = STATUS_BADGE[a.status] ?? STATUS_BADGE.pendente
             return (
               <tr
                 key={a.id}
@@ -173,11 +190,14 @@ function AtividadesTable({ rows }: { rows: Atividade[] }) {
                 <td className="px-6 py-4 text-sm text-texto-principal">
                   {formatPreco(a.preco)}
                 </td>
-                <td className="px-6 py-4 text-sm text-texto-secundario">
-                  {formatPercent(a.comissao_percent)}
+                <td className="px-6 py-4 text-sm text-texto-principal">
+                  {PLANO_LABELS[a.plano] ?? a.plano}
                 </td>
                 <td className="px-6 py-4">
-                  <AtivoToggle id={a.id} ativo={a.ativo} />
+                  <Badge variant={status.variant}>{status.label}</Badge>
+                </td>
+                <td className="px-6 py-4 text-sm text-texto-principal">
+                  {formatDate(a.data_vencimento)}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link

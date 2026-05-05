@@ -20,7 +20,7 @@ export default async function EditarAtividadePage({
   const { data, error } = await supabase
     .from('atividades')
     .select(
-      'id, slug, nome, tipo, descricao, fotos, duracao_horas, preco, capacidade_max, ponto_encontro, lat, lng, whatsapp_operador, comissao_percent, ativo, destaque',
+      'id, slug, nome, tipo, descricao, fotos, duracao_horas, preco, capacidade_max, ponto_encontro, lat, lng, whatsapp_operador, instagram, plano, status, data_inicio, data_vencimento, destaque',
     )
     .eq('id', id)
     .single()

@@ -6,15 +6,15 @@ import { Select } from '@/components/ui/select'
 
 type Props = {
   tipo: string
-  ativo: string
+  status: string
 }
 
-export function Filters({ tipo, ativo }: Props) {
+export function Filters({ tipo, status }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  function update(key: 'tipo' | 'ativo', value: string) {
+  function update(key: 'tipo' | 'status', value: string) {
     const params = new URLSearchParams(searchParams.toString())
     if (value) {
       params.set(key, value)
@@ -25,7 +25,7 @@ export function Filters({ tipo, ativo }: Props) {
     router.push(qs ? `${pathname}?${qs}` : pathname)
   }
 
-  const hasFilters = Boolean(tipo || ativo)
+  const hasFilters = Boolean(tipo || status)
 
   return (
     <Card>
@@ -49,15 +49,17 @@ export function Filters({ tipo, ativo }: Props) {
           </Select>
         </div>
 
-        <div className="min-w-[180px]">
+        <div className="min-w-[200px]">
           <Select
-            value={ativo}
-            onChange={(e) => update('ativo', e.target.value)}
+            value={status}
+            onChange={(e) => update('status', e.target.value)}
             aria-label="Filtrar por status"
           >
-            <option value="">Ativos e inativos</option>
-            <option value="true">Apenas ativos</option>
-            <option value="false">Apenas inativos</option>
+            <option value="">Todos os status</option>
+            <option value="ativo">Ativo</option>
+            <option value="pausado">Pausado</option>
+            <option value="pendente">Pendente</option>
+            <option value="vencido">Vencido</option>
           </Select>
         </div>
 

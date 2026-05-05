@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { slugify } from '@/lib/utils'
+import { sanitizeInstagramHandle, slugify } from '@/lib/utils'
 
 export type ActionState = { error: string | null }
 
@@ -14,6 +14,8 @@ const VALID_TIPOS = [
   'caminhada',
   'outro',
 ] as const
+const VALID_PLANOS = ['mensal', 'anual'] as const
+const VALID_STATUS = ['ativo', 'pausado', 'pendente', 'vencido'] as const
 
 function parseString(v: FormDataEntryValue | null): string | null {
   if (v === null) return null
@@ -31,6 +33,12 @@ function parseNumber(v: FormDataEntryValue | null): number | null {
 function parseInt32(v: FormDataEntryValue | null): number | null {
   const n = parseNumber(v)
   return n === null ? null : Math.trunc(n)
+}
+
+function parseDate(v: FormDataEntryValue | null): string | null {
+  const s = parseString(v)
+  if (s === null) return null
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null
 }
 
 function parseStringArray(formData: FormData, key: string): string[] {
@@ -54,8 +62,11 @@ type Payload = {
   lat: number | null
   lng: number | null
   whatsapp_operador: string | null
-  comissao_percent: number | null
-  ativo: boolean
+  instagram: string | null
+  plano: string
+  status: string
+  data_inicio: string | null
+  data_vencimento: string | null
   destaque: boolean
 }
 
@@ -81,6 +92,16 @@ function parseFormData(formData: FormData): ParseResult {
     return { ok: false, error: 'Selecione um tipo válido.' }
   }
 
+  const plano = parseString(formData.get('plano')) ?? 'mensal'
+  if (!VALID_PLANOS.includes(plano as (typeof VALID_PLANOS)[number])) {
+    return { ok: false, error: 'Selecione um plano válido.' }
+  }
+
+  const status = parseString(formData.get('status')) ?? 'pendente'
+  if (!VALID_STATUS.includes(status as (typeof VALID_STATUS)[number])) {
+    return { ok: false, error: 'Selecione um status válido.' }
+  }
+
   return {
     ok: true,
     data: {
@@ -97,8 +118,11 @@ function parseFormData(formData: FormData): ParseResult {
       lat: parseNumber(formData.get('lat')),
       lng: parseNumber(formData.get('lng')),
       whatsapp_operador: parseString(formData.get('whatsapp_operador')),
-      comissao_percent: parseNumber(formData.get('comissao_percent')),
-      ativo: formData.get('ativo') === 'on',
+      instagram: sanitizeInstagramHandle(parseString(formData.get('instagram'))),
+      plano,
+      status,
+      data_inicio: parseDate(formData.get('data_inicio')),
+      data_vencimento: parseDate(formData.get('data_vencimento')),
       destaque: formData.get('destaque') === 'on',
     },
   }
@@ -109,30 +133,6 @@ function pgErrorMessage(error: { code?: string | null; message: string }): strin
     return 'Já existe uma atividade com este slug. Escolha outro.'
   }
   return error.message
-}
-
-/**
- * Flips atividades.ativo for a single row. Used by the inline toggle in the
- * listing — UX optimistic-flips on the client, then revalidates after the
- * server-side update lands.
- */
-export async function toggleAtivo(id: string): Promise<void> {
-  const supabase = await createClient()
-
-  const { data: existing } = await supabase
-    .from('atividades')
-    .select('ativo')
-    .eq('id', id)
-    .single<{ ativo: boolean }>()
-
-  if (!existing) return
-
-  await supabase
-    .from('atividades')
-    .update({ ativo: !existing.ativo })
-    .eq('id', id)
-
-  revalidatePath('/admin/atividades')
 }
 
 export async function createAtividade(

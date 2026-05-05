@@ -22,6 +22,13 @@ import { Button } from '@/components/ui/button'
 import { cn, slugify } from '@/lib/utils'
 import { PhotoUploader } from '@/components/uploaders/photo-uploader'
 
+function addDays(isoDate: string, days: number): string {
+  const [y, m, d] = isoDate.split('-').map(Number)
+  const dt = new Date(Date.UTC(y, m - 1, d))
+  dt.setUTCDate(dt.getUTCDate() + days)
+  return dt.toISOString().slice(0, 10)
+}
+
 export type AtividadeInitial = {
   id: string
   slug: string
@@ -36,8 +43,11 @@ export type AtividadeInitial = {
   lat: number | null
   lng: number | null
   whatsapp_operador: string | null
-  comissao_percent: number | null
-  ativo: boolean
+  instagram: string | null
+  plano: string
+  status: string
+  data_inicio: string | null
+  data_vencimento: string | null
   destaque: boolean
 }
 
@@ -67,6 +77,12 @@ export function AtividadeForm(props: Props) {
   const [nome, setNome] = useState(initial?.nome ?? '')
   const [slug, setSlug] = useState(initial?.slug ?? '')
   const [slugTouched, setSlugTouched] = useState(mode === 'edit')
+  const [plano, setPlano] = useState(initial?.plano ?? 'mensal')
+  const [dataInicio, setDataInicio] = useState(initial?.data_inicio ?? '')
+  const [dataVencimento, setDataVencimento] = useState(
+    initial?.data_vencimento ?? '',
+  )
+  const [vencimentoTouched, setVencimentoTouched] = useState(mode === 'edit')
 
   // Photo uploader signals when an upload is in flight; we block submit until done.
   const [photosUploading, setPhotosUploading] = useState(false)
@@ -76,6 +92,14 @@ export function AtividadeForm(props: Props) {
       setSlug(slugify(nome))
     }
   }, [nome, slugTouched, mode])
+
+  // data_vencimento auto-calc from plano + data_inicio (until user edits manually)
+  useEffect(() => {
+    if (!vencimentoTouched && dataInicio) {
+      const days = plano === 'anual' ? 365 : 30
+      setDataVencimento(addDays(dataInicio, days))
+    }
+  }, [plano, dataInicio, vencimentoTouched])
 
   const [host, setHost] = useState('soyitafun.com')
   useEffect(() => {
@@ -166,14 +190,6 @@ export function AtividadeForm(props: Props) {
             </Section>
 
             <Section title="Operação">
-              {/*
-                IMPORTANTE — comissao_percent é dado interno:
-                - No admin: visível e editável (este form + listado).
-                - Na web pública: NÃO se exibe. É o acordo entre Cata e o
-                  operador, não algo que o cliente final precise ver.
-                Quando shippar páginas públicas, garantir que comissão NÃO
-                vaze pra fora.
-              */}
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Duração (horas)" htmlFor="duracao_horas">
                   <Input
@@ -199,34 +215,17 @@ export function AtividadeForm(props: Props) {
                 </Field>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Preço (R$)" htmlFor="preco">
-                  <Input
-                    id="preco"
-                    name="preco"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    defaultValue={initial?.preco ?? ''}
-                    placeholder="450.00"
-                  />
-                </Field>
-                <Field
-                  label="Comissão (%)"
-                  htmlFor="comissao_percent"
-                  hint="Dado interno. Não aparece no portal público."
-                >
-                  <Input
-                    id="comissao_percent"
-                    name="comissao_percent"
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    defaultValue={initial?.comissao_percent ?? 15}
-                    placeholder="15"
-                  />
-                </Field>
-              </div>
+              <Field label="Preço (R$)" htmlFor="preco">
+                <Input
+                  id="preco"
+                  name="preco"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={initial?.preco ?? ''}
+                  placeholder="450.00"
+                />
+              </Field>
             </Section>
 
             <Section title="Encontro e localização">
@@ -283,6 +282,18 @@ export function AtividadeForm(props: Props) {
                   placeholder="5512999999999"
                 />
               </Field>
+              <Field
+                label="Instagram"
+                htmlFor="instagram"
+                hint="Sem @, apenas o nome de usuário"
+              >
+                <Input
+                  id="instagram"
+                  name="instagram"
+                  defaultValue={initial?.instagram ?? ''}
+                  placeholder="operadornome"
+                />
+              </Field>
             </Section>
 
             <Section title="Fotos">
@@ -294,26 +305,68 @@ export function AtividadeForm(props: Props) {
               />
             </Section>
 
+            <Section title="Plano e vigência">
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Plano" htmlFor="plano">
+                  <Select
+                    id="plano"
+                    name="plano"
+                    value={plano}
+                    onChange={(e) => setPlano(e.target.value)}
+                  >
+                    <option value="mensal">Mensal</option>
+                    <option value="anual">Anual</option>
+                  </Select>
+                </Field>
+                <Field label="Status" htmlFor="status">
+                  <Select
+                    id="status"
+                    name="status"
+                    defaultValue={initial?.status ?? 'pendente'}
+                  >
+                    <option value="pendente">Pendente</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="pausado">Pausado</option>
+                    <option value="vencido">Vencido</option>
+                  </Select>
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Data de início" htmlFor="data_inicio">
+                  <Input
+                    id="data_inicio"
+                    name="data_inicio"
+                    type="date"
+                    value={dataInicio}
+                    onChange={(e) => setDataInicio(e.target.value)}
+                  />
+                </Field>
+                <Field
+                  label="Data de vencimento"
+                  htmlFor="data_vencimento"
+                  hint={
+                    !vencimentoTouched && dataInicio
+                      ? `Calculado automaticamente (+${plano === 'anual' ? '365' : '30'} dias)`
+                      : undefined
+                  }
+                >
+                  <Input
+                    id="data_vencimento"
+                    name="data_vencimento"
+                    type="date"
+                    value={dataVencimento}
+                    onChange={(e) => {
+                      setDataVencimento(e.target.value)
+                      setVencimentoTouched(true)
+                    }}
+                  />
+                </Field>
+              </div>
+            </Section>
+
             <Section title="Visibilidade">
               <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="ativo"
-                  defaultChecked={initial?.ativo ?? true}
-                  className="mt-0.5 w-4 h-4 rounded-sm border border-texto-secundario/30 text-acento-mar focus:ring-acento-mar/30 focus:ring-1 cursor-pointer"
-                />
-                <div>
-                  <p className="text-sm text-texto-principal font-medium">
-                    Atividade ativa
-                  </p>
-                  <p className="text-xs text-texto-secundario mt-0.5 leading-relaxed">
-                    Aparece na vitrine pública. Pode ser desativada a qualquer
-                    momento sem perder os dados.
-                  </p>
-                </div>
-              </label>
-
-              <label className="flex items-start gap-3 cursor-pointer pt-2">
                 <input
                   type="checkbox"
                   name="destaque"
