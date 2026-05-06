@@ -258,7 +258,8 @@ export function HospedagemForm(props: Props) {
                     id="capacidade"
                     name="capacidade"
                     type="number"
-                    min="0"
+                    min="1"
+                    required
                     defaultValue={initial?.capacidade ?? ''}
                     placeholder="6"
                   />
