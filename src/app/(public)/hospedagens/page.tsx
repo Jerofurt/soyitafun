@@ -3,7 +3,10 @@ import {
   HospedagemCard,
   type HospedagemCardData,
 } from '@/components/public/hospedagem-card'
+import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 import { Filters } from './filters'
+
+const CATA_WHATSAPP = '5512991560367'
 
 const VALID_ZONAS = new Set(['vila', 'condominio'])
 
@@ -36,6 +39,7 @@ export default async function HospedagensListPage({
 
   const { data } = await query
   const rows = (data ?? []) as HospedagemCardData[]
+  const hasFilters = Boolean(zona || hasCapacidadeFilter)
 
   return (
     <>
@@ -45,7 +49,17 @@ export default async function HospedagensListPage({
         <Filters zona={zona} capacidade={capacidade} />
 
         {rows.length === 0 ? (
-          <Empty />
+          hasFilters ? (
+            <Empty />
+          ) : (
+            <EmptyStateCTA
+              title="Sua pousada poderia estar aqui"
+              subtitle="Estamos curando os melhores hospedagens de Itamambuca. Fale com Catalina para fazer parte."
+              ctaText="Falar com Catalina"
+              whatsappNumber={CATA_WHATSAPP}
+              whatsappMessage="Olá Catalina! Tenho uma pousada em Itamambuca e gostaria de aparecer no soyitafun."
+            />
+          )
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {rows.map((h) => (

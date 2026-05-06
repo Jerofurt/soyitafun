@@ -3,7 +3,10 @@ import {
   AtividadeCard,
   type AtividadeCardData,
 } from '@/components/public/atividade-card'
+import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 import { Filters } from './filters'
+
+const CATA_WHATSAPP = '5512991560367'
 
 const VALID_TIPOS = new Set([
   'lancha',
@@ -36,6 +39,7 @@ export default async function AtividadesListPage({
 
   const { data } = await query
   const rows = (data ?? []) as AtividadeCardData[]
+  const hasFilters = Boolean(tipo)
 
   return (
     <>
@@ -45,7 +49,17 @@ export default async function AtividadesListPage({
         <Filters tipo={tipo} />
 
         {rows.length === 0 ? (
-          <Empty />
+          hasFilters ? (
+            <Empty />
+          ) : (
+            <EmptyStateCTA
+              title="Sua atividade poderia estar aqui"
+              subtitle="Estamos curando lanchas, surf, cachoeiras e trilhas em Itamambuca. Fale com Catalina para fazer parte."
+              ctaText="Falar com Catalina"
+              whatsappNumber={CATA_WHATSAPP}
+              whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soyitafun."
+            />
+          )
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {rows.map((a) => (

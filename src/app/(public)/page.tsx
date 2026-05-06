@@ -9,6 +9,9 @@ import {
   AtividadeCard,
   type AtividadeCardData,
 } from '@/components/public/atividade-card'
+import { EmptyStateCTA } from '@/components/public/empty-state-cta'
+
+const CATA_WHATSAPP = '5512991560367'
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -46,13 +49,23 @@ export default async function HomePage() {
         title="Onde ficar em Itamambuca"
         seeAllLabel="Ver todas as hospedagens"
         seeAllHref="/hospedagens"
-        empty={hospedagens.length === 0}
+        showSeeAll={hospedagens.length > 0}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {hospedagens.map((h) => (
-            <HospedagemCard key={h.slug} h={h} />
-          ))}
-        </div>
+        {hospedagens.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {hospedagens.map((h) => (
+              <HospedagemCard key={h.slug} h={h} />
+            ))}
+          </div>
+        ) : (
+          <EmptyStateCTA
+            title="Sua pousada poderia estar aqui"
+            subtitle="Estamos curando os melhores hospedagens de Itamambuca. Fale com Catalina para fazer parte."
+            ctaText="Falar com Catalina"
+            whatsappNumber={CATA_WHATSAPP}
+            whatsappMessage="Olá Catalina! Tenho uma pousada em Itamambuca e gostaria de aparecer no soyitafun."
+          />
+        )}
       </Section>
 
       <Section
@@ -60,13 +73,23 @@ export default async function HomePage() {
         title="Aventuras em Itamambuca"
         seeAllLabel="Ver todas as atividades"
         seeAllHref="/atividades"
-        empty={atividades.length === 0}
+        showSeeAll={atividades.length > 0}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {atividades.map((a) => (
-            <AtividadeCard key={a.slug} a={a} />
-          ))}
-        </div>
+        {atividades.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {atividades.map((a) => (
+              <AtividadeCard key={a.slug} a={a} />
+            ))}
+          </div>
+        ) : (
+          <EmptyStateCTA
+            title="Sua atividade poderia estar aqui"
+            subtitle="Estamos curando lanchas, surf, cachoeiras e trilhas em Itamambuca. Fale com Catalina para fazer parte."
+            ctaText="Falar com Catalina"
+            whatsappNumber={CATA_WHATSAPP}
+            whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soyitafun."
+          />
+        )}
       </Section>
 
       <Sobre />
@@ -127,18 +150,16 @@ function Section({
   title,
   seeAllLabel,
   seeAllHref,
-  empty,
+  showSeeAll,
   children,
 }: {
   kicker: string
   title: string
   seeAllLabel: string
   seeAllHref: string
-  empty: boolean
+  showSeeAll: boolean
   children: React.ReactNode
 }) {
-  if (empty) return null
-
   return (
     <section className="max-w-6xl mx-auto px-6 md:px-8 py-24 md:py-32">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
@@ -150,12 +171,14 @@ function Section({
             {title}
           </h2>
         </div>
-        <Link
-          href={seeAllHref}
-          className="text-sm text-acento-mar hover:text-acento-mar/70 font-medium transition-colors duration-200 self-start md:self-end"
-        >
-          {seeAllLabel} →
-        </Link>
+        {showSeeAll && (
+          <Link
+            href={seeAllHref}
+            className="text-sm text-acento-mar hover:text-acento-mar/70 font-medium transition-colors duration-200 self-start md:self-end"
+          >
+            {seeAllLabel} →
+          </Link>
+        )}
       </div>
 
       {children}
