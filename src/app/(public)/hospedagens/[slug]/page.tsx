@@ -1,8 +1,16 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { PhotoGallery } from '@/components/public/photo-gallery'
 import { ContactButtons } from '@/components/public/contact-buttons'
+
+const SITE_URL = 'https://soyitafun.netlify.app'
+
+function truncate(s: string, n: number): string {
+  if (s.length <= n) return s
+  return s.slice(0, n - 1).trimEnd() + '…'
+}
 
 const ZONA_LABELS: Record<string, string> = {
   vila: 'Vila',
@@ -42,13 +50,7 @@ type Hospedagem = {
   status: string
 }
 
-export default async function HospedagemDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
-
+async function fetchHospedagem(slug: string): Promise<Hospedagem | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('hospedagens')
@@ -58,16 +60,85 @@ export default async function HospedagemDetailPage({
     .eq('slug', slug)
     .single()
 
-  if (error || !data) notFound()
-  const h = data as Hospedagem
+  if (error || !data) return null
+  return data as Hospedagem
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const h = await fetchHospedagem(slug)
+  if (!h || h.status !== 'ativo') {
+    return { title: 'soyitafun' }
+  }
+  const title = `${h.nome} em Itamambuca | soyitafun`
+  const description = h.descricao
+    ? truncate(h.descricao, 155)
+    : `${h.nome} em Itamambuca, Ubatuba. Hospedagem curada por soyitafun.`
+  const image = h.fotos?.[0] ? buildPhotoUrl(h.fotos[0]) : undefined
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: image ? [image] : undefined,
+      type: 'website',
+      locale: 'pt_BR',
+      url: `${SITE_URL}/hospedagens/${h.slug}`,
+    },
+  }
+}
+
+export default async function HospedagemDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+
+  const h = await fetchHospedagem(slug)
+  if (!h) notFound()
   if (h.status !== 'ativo') notFound()
 
   const fotos = h.fotos ?? []
   const comodidades = h.comodidades ?? []
   const whatsappMessage = `Olá! Vi sua hospedagem ${h.nome} no soyitafun e gostaria de mais informações.`
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LodgingBusiness',
+    name: h.nome,
+    image: fotos.map(buildPhotoUrl),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Itamambuca, Ubatuba',
+      addressRegion: 'SP',
+      addressCountry: 'BR',
+      streetAddress: h.endereco ?? undefined,
+    },
+    geo:
+      h.lat !== null && h.lng !== null
+        ? {
+            '@type': 'GeoCoordinates',
+            latitude: h.lat,
+            longitude: h.lng,
+          }
+        : undefined,
+    telephone: h.whatsapp ?? undefined,
+    url: `${SITE_URL}/hospedagens/${h.slug}`,
+  }
+
   return (
     <article className="max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PhotoGallery photos={fotos} alt={h.nome} buildUrl={buildPhotoUrl} />
 
       <div className="mt-10 md:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">

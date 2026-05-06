@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import {
   AtividadeCard,
@@ -7,6 +8,19 @@ import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 import { Filters } from './filters'
 
 const CATA_WHATSAPP = '5512991560367'
+
+export const metadata: Metadata = {
+  title: 'O que fazer em Itamambuca | soyitafun',
+  description:
+    'Aventuras curadas em Itamambuca: lancha, surf, cachoeiras, trilhas e mais.',
+  openGraph: {
+    title: 'O que fazer em Itamambuca | soyitafun',
+    description:
+      'Aventuras curadas em Itamambuca: lancha, surf, cachoeiras, trilhas e mais.',
+    type: 'website',
+    locale: 'pt_BR',
+  },
+}
 
 const VALID_TIPOS = new Set([
   'lancha',

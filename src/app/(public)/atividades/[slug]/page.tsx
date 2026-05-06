@@ -1,8 +1,16 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { PhotoGallery } from '@/components/public/photo-gallery'
 import { ContactButtons } from '@/components/public/contact-buttons'
+
+const SITE_URL = 'https://soyitafun.netlify.app'
+
+function truncate(s: string, n: number): string {
+  if (s.length <= n) return s
+  return s.slice(0, n - 1).trimEnd() + '…'
+}
 
 const TIPO_LABELS: Record<string, string> = {
   lancha: 'Lancha',
@@ -45,13 +53,7 @@ type Atividade = {
   status: string
 }
 
-export default async function AtividadeDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
-
+async function fetchAtividade(slug: string): Promise<Atividade | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('atividades')
@@ -61,15 +63,77 @@ export default async function AtividadeDetailPage({
     .eq('slug', slug)
     .single()
 
-  if (error || !data) notFound()
-  const a = data as Atividade
+  if (error || !data) return null
+  return data as Atividade
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const a = await fetchAtividade(slug)
+  if (!a || a.status !== 'ativo') {
+    return { title: 'soyitafun' }
+  }
+  const title = `${a.nome} | soyitafun`
+  const description = a.descricao
+    ? truncate(a.descricao, 155)
+    : `${a.nome} em Itamambuca, Ubatuba. Atividade curada por soyitafun.`
+  const image = a.fotos?.[0] ? buildPhotoUrl(a.fotos[0]) : undefined
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: image ? [image] : undefined,
+      type: 'website',
+      locale: 'pt_BR',
+      url: `${SITE_URL}/atividades/${a.slug}`,
+    },
+  }
+}
+
+export default async function AtividadeDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+
+  const a = await fetchAtividade(slug)
+  if (!a) notFound()
   if (a.status !== 'ativo') notFound()
 
   const fotos = a.fotos ?? []
   const whatsappMessage = `Olá! Vi a atividade ${a.nome} no soyitafun e gostaria de mais informações.`
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name: a.nome,
+    image: fotos.map(buildPhotoUrl),
+    geo:
+      a.lat !== null && a.lng !== null
+        ? {
+            '@type': 'GeoCoordinates',
+            latitude: a.lat,
+            longitude: a.lng,
+          }
+        : undefined,
+    telephone: a.whatsapp_operador ?? undefined,
+    url: `${SITE_URL}/atividades/${a.slug}`,
+  }
+
   return (
     <article className="max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PhotoGallery photos={fotos} alt={a.nome} buildUrl={buildPhotoUrl} />
 
       <div className="mt-10 md:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">

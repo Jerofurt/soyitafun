@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
@@ -12,6 +13,20 @@ import {
 import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 
 const CATA_WHATSAPP = '5512991560367'
+
+export const metadata: Metadata = {
+  title: 'soyitafun — Portal de Itamambuca',
+  description:
+    '110 praias, mata atlântica e cachoeiras escondidas no litoral norte de São Paulo. Hospedagens curadas e atividades em Itamambuca, Ubatuba.',
+  openGraph: {
+    title: 'soyitafun — Portal de Itamambuca',
+    description:
+      '110 praias, mata atlântica e cachoeiras escondidas no litoral norte de São Paulo. Hospedagens curadas e atividades em Itamambuca, Ubatuba.',
+    images: ['/hero-placeholder.svg'],
+    type: 'website',
+    locale: 'pt_BR',
+  },
+}
 
 export default async function HomePage() {
   const supabase = await createClient()

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import {
   HospedagemCard,
@@ -7,6 +8,19 @@ import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 import { Filters } from './filters'
 
 const CATA_WHATSAPP = '5512991560367'
+
+export const metadata: Metadata = {
+  title: 'Hospedagens em Itamambuca | soyitafun',
+  description:
+    'Pousadas, casas e hospedagens curadas em Itamambuca, uma das praias mais preservadas de Ubatuba.',
+  openGraph: {
+    title: 'Hospedagens em Itamambuca | soyitafun',
+    description:
+      'Pousadas, casas e hospedagens curadas em Itamambuca, uma das praias mais preservadas de Ubatuba.',
+    type: 'website',
+    locale: 'pt_BR',
+  },
+}
 
 const VALID_ZONAS = new Set(['vila', 'condominio'])
 
