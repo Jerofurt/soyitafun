@@ -37,53 +37,70 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function HomePage() {
+/**
+ * Fetch up to `limit` rows for a home destaque section. Hybrid logic:
+ * destaque=true first, then top up with the most recent non-destaque
+ * actives if the destacados alone don't fill the slots. Empty state CTA
+ * fires only when the table has zero ativos at all.
+ */
+async function fetchHomeRows<T extends { id: string }>(
+  table: string,
+  columns: string,
+  limit = 3,
+): Promise<T[]> {
   const supabase = await createClient()
 
-  const [
-    { data: hospedagensRaw },
-    { data: atividadesRaw },
-    { data: comerciosRaw },
-    { data: servicosRaw },
-  ] = await Promise.all([
-    supabase
-      .from('hospedagens')
-      .select(
-        'slug, nome, zona, capacidade, preco_diaria_baixa, fotos',
-      )
-      .eq('destaque', true)
-      .eq('status', 'ativo')
-      .order('created_at', { ascending: false })
-      .limit(3),
-    supabase
-      .from('atividades')
-      .select(
-        'slug, nome, tipo, duracao_horas, preco, capacidade_max, fotos',
-      )
-      .eq('destaque', true)
-      .eq('status', 'ativo')
-      .order('created_at', { ascending: false })
-      .limit(3),
-    supabase
-      .from('comercios')
-      .select('slug, nome, categoria, horario, endereco, fotos')
-      .eq('destaque', true)
-      .eq('status', 'ativo')
-      .order('created_at', { ascending: false })
-      .limit(3),
-    supabase
-      .from('servicos')
-      .select('slug, nome, tipo, preco_base, fotos')
-      .eq('destaque', true)
-      .eq('status', 'ativo')
-      .order('created_at', { ascending: false })
-      .limit(3),
-  ])
+  const { data: destacadosRaw } = await supabase
+    .from(table)
+    .select(columns)
+    .eq('status', 'ativo')
+    .eq('destaque', true)
+    .order('created_at', { ascending: false })
+    .limit(limit)
 
-  const hospedagens = (hospedagensRaw ?? []) as HospedagemCardData[]
-  const atividades = (atividadesRaw ?? []) as AtividadeCardData[]
-  const comercios = (comerciosRaw ?? []) as ComercioCardData[]
-  const servicos = (servicosRaw ?? []) as ServicoCardData[]
+  const destacados = (destacadosRaw ?? []) as unknown as T[]
+  if (destacados.length >= limit) return destacados
+
+  const ids = destacados.map((d) => d.id)
+  const remaining = limit - destacados.length
+
+  let q = supabase
+    .from(table)
+    .select(columns)
+    .eq('status', 'ativo')
+    .eq('destaque', false)
+    .order('created_at', { ascending: false })
+    .limit(remaining)
+
+  if (ids.length > 0) {
+    q = q.not('id', 'in', `(${ids.join(',')})`)
+  }
+
+  const { data: complementoRaw } = await q
+  const complemento = (complementoRaw ?? []) as unknown as T[]
+
+  return [...destacados, ...complemento]
+}
+
+export default async function HomePage() {
+  const [hospedagens, atividades, comercios, servicos] = await Promise.all([
+    fetchHomeRows<HospedagemCardData & { id: string }>(
+      'hospedagens',
+      'id, slug, nome, zona, capacidade, preco_diaria_baixa, fotos',
+    ),
+    fetchHomeRows<AtividadeCardData & { id: string }>(
+      'atividades',
+      'id, slug, nome, tipo, duracao_horas, preco, capacidade_max, fotos',
+    ),
+    fetchHomeRows<ComercioCardData & { id: string }>(
+      'comercios',
+      'id, slug, nome, categoria, horario, endereco, fotos',
+    ),
+    fetchHomeRows<ServicoCardData & { id: string }>(
+      'servicos',
+      'id, slug, nome, tipo, preco_base, fotos',
+    ),
+  ])
 
   return (
     <>
