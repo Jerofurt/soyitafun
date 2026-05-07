@@ -47,7 +47,12 @@ export function Header() {
         <div className="max-w-6xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="font-display text-2xl text-texto-principal tracking-tight"
+            className={cn(
+              'font-display text-2xl tracking-tight transition-colors duration-200',
+              scrolled || mobileOpen
+                ? 'text-texto-principal'
+                : 'text-fondo-base [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]',
+            )}
             onClick={() => setMobileOpen(false)}
           >
             soyitafun
@@ -58,7 +63,12 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm text-texto-principal/85 hover:text-acento-mar transition-colors duration-200"
+                className={cn(
+                  'text-sm transition-colors duration-200',
+                  scrolled
+                    ? 'text-texto-principal/85 hover:text-acento-mar'
+                    : 'text-fondo-base/95 hover:text-acento-dourado [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]',
+                )}
               >
                 {item.label}
               </Link>
@@ -70,7 +80,12 @@ export function Header() {
             aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 text-texto-principal"
+            className={cn(
+              'md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 transition-colors duration-200',
+              scrolled || mobileOpen
+                ? 'text-texto-principal'
+                : 'text-fondo-base [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.35))]',
+            )}
           >
             <span className="relative block w-5 h-3.5">
               <span
