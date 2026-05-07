@@ -35,6 +35,22 @@ export function Footer() {
                   Atividades
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/comercios"
+                  className="text-sm text-texto-principal hover:text-acento-mar transition-colors duration-200"
+                >
+                  Comércios
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/servicos"
+                  className="text-sm text-texto-principal hover:text-acento-mar transition-colors duration-200"
+                >
+                  Serviços
+                </Link>
+              </li>
             </ul>
           </div>
 

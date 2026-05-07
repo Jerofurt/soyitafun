@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 const NAV = [
   { href: '/hospedagens', label: 'Hospedagens' },
   { href: '/atividades', label: 'O que fazer' },
+  { href: '/comercios', label: 'Comércios' },
+  { href: '/servicos', label: 'Serviços' },
 ] as const
 
 export function Header() {
@@ -51,7 +53,7 @@ export function Header() {
             soyitafun
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
             {NAV.map((item) => (
               <Link
                 key={item.href}
