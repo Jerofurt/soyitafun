@@ -23,13 +23,17 @@ export default async function AdminDashboard() {
     .eq('id', user.id)
     .single()
 
-  const { count: hospedagensCount } = await supabase
-    .from('hospedagens')
-    .select('*', { count: 'exact', head: true })
-
-  const { count: atividadesCount } = await supabase
-    .from('atividades')
-    .select('*', { count: 'exact', head: true })
+  const [
+    { count: hospedagensCount },
+    { count: atividadesCount },
+    { count: comerciosCount },
+    { count: servicosCount },
+  ] = await Promise.all([
+    supabase.from('hospedagens').select('*', { count: 'exact', head: true }),
+    supabase.from('atividades').select('*', { count: 'exact', head: true }),
+    supabase.from('comercios').select('*', { count: 'exact', head: true }),
+    supabase.from('servicos').select('*', { count: 'exact', head: true }),
+  ])
 
   return (
     <main className="min-h-screen bg-fondo-base">
@@ -83,8 +87,16 @@ export default async function AdminDashboard() {
               title="Atividades"
               count={atividadesCount ?? 0}
             />
-            <DashboardLink href="#" title="Comércios" count={0} disabled />
-            <DashboardLink href="#" title="Serviços" count={0} disabled />
+            <DashboardLink
+              href="/admin/comercios"
+              title="Comércios"
+              count={comerciosCount ?? 0}
+            />
+            <DashboardLink
+              href="/admin/servicos"
+              title="Serviços"
+              count={servicosCount ?? 0}
+            />
           </div>
         </div>
       </div>
