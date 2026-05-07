@@ -11,6 +11,14 @@ import {
   AtividadeCard,
   type AtividadeCardData,
 } from '@/components/public/atividade-card'
+import {
+  ComercioCard,
+  type ComercioCardData,
+} from '@/components/public/comercio-card'
+import {
+  ServicoCard,
+  type ServicoCardData,
+} from '@/components/public/servico-card'
 import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 
 const CATA_WHATSAPP = '5512991560367'
@@ -32,7 +40,12 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const supabase = await createClient()
 
-  const [{ data: hospedagensRaw }, { data: atividadesRaw }] = await Promise.all([
+  const [
+    { data: hospedagensRaw },
+    { data: atividadesRaw },
+    { data: comerciosRaw },
+    { data: servicosRaw },
+  ] = await Promise.all([
     supabase
       .from('hospedagens')
       .select(
@@ -51,10 +64,26 @@ export default async function HomePage() {
       .eq('status', 'ativo')
       .order('created_at', { ascending: false })
       .limit(3),
+    supabase
+      .from('comercios')
+      .select('slug, nome, categoria, horario, endereco, fotos')
+      .eq('destaque', true)
+      .eq('status', 'ativo')
+      .order('created_at', { ascending: false })
+      .limit(3),
+    supabase
+      .from('servicos')
+      .select('slug, nome, tipo, preco_base, fotos')
+      .eq('destaque', true)
+      .eq('status', 'ativo')
+      .order('created_at', { ascending: false })
+      .limit(3),
   ])
 
   const hospedagens = (hospedagensRaw ?? []) as HospedagemCardData[]
   const atividades = (atividadesRaw ?? []) as AtividadeCardData[]
+  const comercios = (comerciosRaw ?? []) as ComercioCardData[]
+  const servicos = (servicosRaw ?? []) as ServicoCardData[]
 
   return (
     <>
@@ -104,6 +133,54 @@ export default async function HomePage() {
             ctaText="Falar com Catalina"
             whatsappNumber={CATA_WHATSAPP}
             whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soyitafun."
+          />
+        )}
+      </Section>
+
+      <Section
+        kicker="Onde comer e comprar"
+        title="Comércios em Itamambuca"
+        seeAllLabel="Ver todos os comércios"
+        seeAllHref="/comercios"
+        showSeeAll={comercios.length > 0}
+      >
+        {comercios.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {comercios.map((c) => (
+              <ComercioCard key={c.slug} c={c} />
+            ))}
+          </div>
+        ) : (
+          <EmptyStateCTA
+            title="Seu comércio poderia estar aqui"
+            subtitle="Estamos curando os melhores comércios de Itamambuca. Fale com Catalina para fazer parte."
+            ctaText="Falar com Catalina"
+            whatsappNumber={CATA_WHATSAPP}
+            whatsappMessage="Olá Catalina! Tenho um comércio em Itamambuca e gostaria de aparecer no soyitafun."
+          />
+        )}
+      </Section>
+
+      <Section
+        kicker="Serviços"
+        title="Serviços em Itamambuca"
+        seeAllLabel="Ver todos os serviços"
+        seeAllHref="/servicos"
+        showSeeAll={servicos.length > 0}
+      >
+        {servicos.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {servicos.map((s) => (
+              <ServicoCard key={s.slug} s={s} />
+            ))}
+          </div>
+        ) : (
+          <EmptyStateCTA
+            title="Seu serviço poderia estar aqui"
+            subtitle="Estamos curando os melhores serviços de Itamambuca. Fale com Catalina para fazer parte."
+            ctaText="Falar com Catalina"
+            whatsappNumber={CATA_WHATSAPP}
+            whatsappMessage="Olá Catalina! Tenho um serviço em Itamambuca e gostaria de aparecer no soyitafun."
           />
         )}
       </Section>
