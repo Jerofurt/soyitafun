@@ -83,9 +83,20 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-texto-secundario/10">
+        <div className="mt-16 pt-8 border-t border-texto-secundario/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p className="text-xs text-texto-secundario">
             © 2026 soyitafun. Curadoria local em Itamambuca, SP.
+          </p>
+          <p className="text-xs text-texto-secundario/70">
+            Powered by{' '}
+            <a
+              href="https://ailosofy.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-acento-mar transition-colors duration-200"
+            >
+              AiLosofy
+            </a>
           </p>
         </div>
       </div>
