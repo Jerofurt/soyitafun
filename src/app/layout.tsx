@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "soyitafun — Portal de Itamambuca",
   description:
     "Hospedagens, atividades, comércios e serviços em Itamambuca, Ubatuba.",
+  openGraph: {
+    images: ["/itamambuca-amanhecer.jpeg"],
+  },
 };
 
 export default function RootLayout({

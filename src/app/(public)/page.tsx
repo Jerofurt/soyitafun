@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     title: 'soyitafun — Portal de Itamambuca',
     description:
       '110 praias, mata atlântica e cachoeiras escondidas no litoral norte de São Paulo. Hospedagens curadas e atividades em Itamambuca, Ubatuba.',
-    images: ['/hero-placeholder.svg'],
+    images: ['/itamambuca-amanhecer.jpeg'],
     type: 'website',
     locale: 'pt_BR',
   },
@@ -118,16 +119,17 @@ function Hero() {
       className="relative w-full flex items-center justify-center -mt-16 pt-16"
       style={{ minHeight: '80vh' }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/hero-placeholder.svg"
-        alt=""
-        aria-hidden
-        className="absolute inset-0 w-full h-full object-cover"
+      <Image
+        src="/itamambuca-amanhecer.jpeg"
+        alt="Amanecer en Itamambuca, Ubatuba — mata atlántica e mar"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
       />
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-b from-texto-principal/45 via-texto-principal/35 to-texto-principal/55"
+        className="absolute inset-0 bg-gradient-to-b from-texto-principal/55 via-texto-principal/40 to-texto-principal/65"
       />
 
       <div className="relative max-w-3xl mx-auto px-6 md:px-8 py-24 text-center">
