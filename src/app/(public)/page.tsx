@@ -139,19 +139,21 @@ function Hero() {
         <h1 className="font-display text-6xl md:text-8xl text-fondo-base mt-6 leading-none">
           soyitafun
         </h1>
-        <p className="text-base md:text-lg text-fondo-base/90 mt-8 leading-relaxed max-w-2xl mx-auto">
+        <p className="text-base md:text-lg text-fondo-base/90 mt-8 leading-relaxed max-w-xl mx-auto">
           110 praias, mata atlântica e cachoeiras escondidas no litoral norte de
           São Paulo.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-12">
-          <Link href="/hospedagens">
-            <Button size="lg">Ver hospedagens</Button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-12">
+          <Link href="/hospedagens" className="block w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto shadow-lg">
+              Ver hospedagens
+            </Button>
           </Link>
-          <Link href="/atividades">
+          <Link href="/atividades" className="block w-full sm:w-auto">
             <Button
               size="lg"
               variant="secondary"
-              className="bg-transparent text-fondo-base border-fondo-base/40 hover:bg-fondo-base/10 hover:border-fondo-base/60"
+              className="w-full sm:w-auto bg-fondo-base text-acento-mar hover:bg-fondo-card border border-fondo-base shadow-lg"
             >
               O que fazer
             </Button>
