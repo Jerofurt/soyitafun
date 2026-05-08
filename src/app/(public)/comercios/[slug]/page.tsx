@@ -130,7 +130,7 @@ export default async function ComercioDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PhotoGallery photos={fotos} alt={c.nome} buildUrl={buildPhotoUrl} />
+      <PhotoGallery photos={fotos.map(buildPhotoUrl)} alt={c.nome} />
 
       <div className="mt-10 md:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
         <div className="lg:col-span-8 space-y-12">

@@ -4,12 +4,16 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 type Props = {
+  /**
+   * Already-built absolute photo URLs. The server component must map
+   * Storage paths through buildPhotoUrl before passing — Next.js bans
+   * passing functions across the RSC boundary into a client component.
+   */
   photos: string[]
   alt: string
-  buildUrl: (path: string) => string
 }
 
-export function PhotoGallery({ photos, alt, buildUrl }: Props) {
+export function PhotoGallery({ photos, alt }: Props) {
   // Truncate silently to 5 visible (1 hero + up to 4 thumbs).
   const visible = photos.slice(0, 5)
   const [active, setActive] = useState(0)
@@ -29,7 +33,7 @@ export function PhotoGallery({ photos, alt, buildUrl }: Props) {
       <div className="aspect-[16/10] rounded-md overflow-hidden bg-fondo-card">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={buildUrl(visible[active])}
+          src={visible[active]}
           alt={alt}
           className="w-full h-full object-cover"
         />
@@ -56,7 +60,7 @@ export function PhotoGallery({ photos, alt, buildUrl }: Props) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={buildUrl(p)}
+                  src={p}
                   alt=""
                   className="w-full h-full object-cover"
                 />
