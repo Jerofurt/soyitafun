@@ -55,7 +55,7 @@ export function Header() {
             )}
             onClick={() => setMobileOpen(false)}
           >
-            soyitafun
+            soy.ita.fan
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">

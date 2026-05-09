@@ -94,7 +94,7 @@ export function ComercioForm(props: Props) {
     }
   }, [plano, dataInicio, vencimentoTouched])
 
-  const [host, setHost] = useState('soyitafun.com')
+  const [host, setHost] = useState('soyitafan.com')
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setHost(window.location.host)

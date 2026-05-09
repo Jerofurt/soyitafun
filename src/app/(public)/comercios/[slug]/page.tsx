@@ -64,12 +64,12 @@ export async function generateMetadata({
   const { slug } = await params
   const c = await fetchComercio(slug)
   if (!c || c.status !== 'ativo') {
-    return { title: 'soyitafun' }
+    return { title: 'soy.ita.fan' }
   }
-  const title = `${c.nome} em Itamambuca | soyitafun`
+  const title = `${c.nome} em Itamambuca — soy.ita.fan`
   const description = c.descricao
     ? truncate(c.descricao, 155)
-    : `${c.nome} em Itamambuca, Ubatuba. Comércio curado por soyitafun.`
+    : `${c.nome} em Itamambuca, Ubatuba. Comércio curado por soy.ita.fan em Itamambuca, Ubatuba`
   const image = c.fotos?.[0] ? buildPhotoUrl(c.fotos[0]) : undefined
 
   return {
@@ -98,7 +98,7 @@ export default async function ComercioDetailPage({
   if (c.status !== 'ativo') notFound()
 
   const fotos = c.fotos ?? []
-  const whatsappMessage = `Olá! Vi seu comércio ${c.nome} no soyitafun e gostaria de mais informações.`
+  const whatsappMessage = `Olá! Vi seu comércio ${c.nome} no soy.ita.fan e gostaria de mais informações.`
 
   const jsonLd = {
     '@context': 'https://schema.org',

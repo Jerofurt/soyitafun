@@ -17,7 +17,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://soyitafun.netlify.app"),
-  title: "soyitafun — Portal de Itamambuca",
+  title: "soy.ita.fan — Portal de Itamambuca",
   description:
     "Hospedagens, atividades, comércios e serviços em Itamambuca, Ubatuba.",
   openGraph: {

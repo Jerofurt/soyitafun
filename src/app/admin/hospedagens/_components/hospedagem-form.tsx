@@ -124,7 +124,7 @@ export function HospedagemForm(props: Props) {
   }, [plano, dataInicio, vencimentoTouched])
 
   // URL preview — host resolved client-side
-  const [host, setHost] = useState('soyitafun.com')
+  const [host, setHost] = useState('soyitafan.com')
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setHost(window.location.host)

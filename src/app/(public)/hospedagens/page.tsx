@@ -10,11 +10,11 @@ import { Filters } from './filters'
 const CATA_WHATSAPP = '5512991560367'
 
 export const metadata: Metadata = {
-  title: 'Hospedagens em Itamambuca | soyitafun',
+  title: 'Hospedagens em Itamambuca — soy.ita.fan',
   description:
     'Pousadas, casas e hospedagens curadas em Itamambuca, uma das praias mais preservadas de Ubatuba.',
   openGraph: {
-    title: 'Hospedagens em Itamambuca | soyitafun',
+    title: 'Hospedagens em Itamambuca — soy.ita.fan',
     description:
       'Pousadas, casas e hospedagens curadas em Itamambuca, uma das praias mais preservadas de Ubatuba.',
     type: 'website',
@@ -71,7 +71,7 @@ export default async function HospedagensListPage({
               subtitle="Estamos curando os melhores hospedagens de Itamambuca. Fale com Catalina para fazer parte."
               ctaText="Falar com Catalina"
               whatsappNumber={CATA_WHATSAPP}
-              whatsappMessage="Olá Catalina! Tenho uma pousada em Itamambuca e gostaria de aparecer no soyitafun."
+              whatsappMessage="Olá Catalina! Tenho uma pousada em Itamambuca e gostaria de aparecer no soy.ita.fan!"
             />
           )
         ) : (

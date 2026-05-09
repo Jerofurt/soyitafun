@@ -72,12 +72,12 @@ export async function generateMetadata({
   const { slug } = await params
   const h = await fetchHospedagem(slug)
   if (!h || h.status !== 'ativo') {
-    return { title: 'soyitafun' }
+    return { title: 'soy.ita.fan' }
   }
-  const title = `${h.nome} em Itamambuca | soyitafun`
+  const title = `${h.nome} em Itamambuca — soy.ita.fan`
   const description = h.descricao
     ? truncate(h.descricao, 155)
-    : `${h.nome} em Itamambuca, Ubatuba. Hospedagem curada por soyitafun.`
+    : `${h.nome} em Itamambuca, Ubatuba. Hospedagem curada por soy.ita.fan em Itamambuca, Ubatuba`
   const image = h.fotos?.[0] ? buildPhotoUrl(h.fotos[0]) : undefined
 
   return {
@@ -107,7 +107,7 @@ export default async function HospedagemDetailPage({
 
   const fotos = h.fotos ?? []
   const comodidades = h.comodidades ?? []
-  const whatsappMessage = `Olá! Vi sua hospedagem ${h.nome} no soyitafun e gostaria de mais informações.`
+  const whatsappMessage = `Olá! Vi sua hospedagem ${h.nome} no soy.ita.fan e gostaria de mais informações.`
 
   const jsonLd = {
     '@context': 'https://schema.org',

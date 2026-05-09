@@ -66,12 +66,12 @@ export async function generateMetadata({
   const { slug } = await params
   const s = await fetchServico(slug)
   if (!s || s.status !== 'ativo') {
-    return { title: 'soyitafun' }
+    return { title: 'soy.ita.fan' }
   }
-  const title = `${s.nome} | soyitafun`
+  const title = `${s.nome} — soy.ita.fan`
   const description = s.descricao
     ? truncate(s.descricao, 155)
-    : `${s.nome} em Itamambuca, Ubatuba. Serviço curado por soyitafun.`
+    : `${s.nome} em Itamambuca, Ubatuba. Serviço curado por soy.ita.fan em Itamambuca, Ubatuba`
   const image = s.fotos?.[0] ? buildPhotoUrl(s.fotos[0]) : undefined
 
   return {
@@ -100,7 +100,7 @@ export default async function ServicoDetailPage({
   if (s.status !== 'ativo') notFound()
 
   const fotos = s.fotos ?? []
-  const whatsappMessage = `Olá! Vi seu serviço ${s.nome} no soyitafun e gostaria de mais informações.`
+  const whatsappMessage = `Olá! Vi seu serviço ${s.nome} no soy.ita.fan e gostaria de mais informações.`
 
   const jsonLd = {
     '@context': 'https://schema.org',

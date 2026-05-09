@@ -18,7 +18,7 @@ export default async function LoginPage({
           <p className="text-[11px] uppercase tracking-[0.25em] text-acento-dourado font-medium">
             Painel administrativo
           </p>
-          <h1 className="text-4xl text-texto-principal">soyitafun</h1>
+          <h1 className="text-4xl text-texto-principal">soy.ita.fan</h1>
         </div>
 
         <Card>

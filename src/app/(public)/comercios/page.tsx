@@ -10,11 +10,11 @@ import { Filters } from './filters'
 const CATA_WHATSAPP = '5512991560367'
 
 export const metadata: Metadata = {
-  title: 'Onde comer e comprar em Itamambuca | soyitafun',
+  title: 'Onde comer e comprar em Itamambuca — soy.ita.fan',
   description:
     'Restaurantes, padarias, mercados e lojas curados em Itamambuca, Ubatuba.',
   openGraph: {
-    title: 'Onde comer e comprar em Itamambuca | soyitafun',
+    title: 'Onde comer e comprar em Itamambuca — soy.ita.fan',
     description:
       'Restaurantes, padarias, mercados e lojas curados em Itamambuca, Ubatuba.',
     type: 'website',
@@ -70,7 +70,7 @@ export default async function ComerciosListPage({
               subtitle="Estamos curando os melhores comércios de Itamambuca. Fale com Catalina para fazer parte."
               ctaText="Falar com Catalina"
               whatsappNumber={CATA_WHATSAPP}
-              whatsappMessage="Olá Catalina! Tenho um comércio em Itamambuca e gostaria de aparecer no soyitafun."
+              whatsappMessage="Olá Catalina! Tenho um comércio em Itamambuca e gostaria de aparecer no soy.ita.fan!"
             />
           )
         ) : (

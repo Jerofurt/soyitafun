@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
           <div>
             <Link href="/" className="font-display text-2xl text-texto-principal">
-              soyitafun
+              soy.ita.fan
             </Link>
             <p className="text-sm text-texto-secundario mt-4 leading-relaxed max-w-xs">
               Curadoria de Catalina Furtado em Itamambuca.
@@ -85,7 +85,7 @@ export function Footer() {
 
         <div className="mt-16 pt-8 border-t border-texto-secundario/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p className="text-xs text-texto-secundario">
-            © 2026 soyitafun. Curadoria local em Itamambuca, SP.
+            © 2026 soy.ita.fan — Curadoria local em Itamambuca, SP
           </p>
           <p className="text-xs text-texto-secundario/70">
             Powered by{' '}

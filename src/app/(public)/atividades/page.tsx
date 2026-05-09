@@ -10,11 +10,11 @@ import { Filters } from './filters'
 const CATA_WHATSAPP = '5512991560367'
 
 export const metadata: Metadata = {
-  title: 'O que fazer em Itamambuca | soyitafun',
+  title: 'O que fazer em Itamambuca — soy.ita.fan',
   description:
     'Aventuras curadas em Itamambuca: lancha, surf, cachoeiras, trilhas e mais.',
   openGraph: {
-    title: 'O que fazer em Itamambuca | soyitafun',
+    title: 'O que fazer em Itamambuca — soy.ita.fan',
     description:
       'Aventuras curadas em Itamambuca: lancha, surf, cachoeiras, trilhas e mais.',
     type: 'website',
@@ -71,7 +71,7 @@ export default async function AtividadesListPage({
               subtitle="Estamos curando lanchas, surf, cachoeiras e trilhas em Itamambuca. Fale com Catalina para fazer parte."
               ctaText="Falar com Catalina"
               whatsappNumber={CATA_WHATSAPP}
-              whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soyitafun."
+              whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soy.ita.fan!"
             />
           )
         ) : (

@@ -43,7 +43,7 @@ export default async function AdminDashboard() {
             <p className="text-[10px] uppercase tracking-[0.25em] text-acento-dourado font-medium mb-1">
               Painel administrativo
             </p>
-            <h1 className="text-2xl text-texto-principal">soyitafun</h1>
+            <h1 className="text-2xl text-texto-principal">soy.ita.fan</h1>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-right">

@@ -24,11 +24,11 @@ import { EmptyStateCTA } from '@/components/public/empty-state-cta'
 const CATA_WHATSAPP = '5512991560367'
 
 export const metadata: Metadata = {
-  title: 'soyitafun — Portal de Itamambuca',
+  title: 'soy.ita.fan — Portal de Itamambuca',
   description:
     '110 praias, mata atlântica e cachoeiras escondidas no litoral norte de São Paulo. Hospedagens curadas e atividades em Itamambuca, Ubatuba.',
   openGraph: {
-    title: 'soyitafun — Portal de Itamambuca',
+    title: 'soy.ita.fan — Portal de Itamambuca',
     description:
       '110 praias, mata atlântica e cachoeiras escondidas no litoral norte de São Paulo. Hospedagens curadas e atividades em Itamambuca, Ubatuba.',
     images: ['/itamambuca-amanhecer.jpeg'],
@@ -125,7 +125,7 @@ export default async function HomePage() {
             subtitle="Estamos curando os melhores hospedagens de Itamambuca. Fale com Catalina para fazer parte."
             ctaText="Falar com Catalina"
             whatsappNumber={CATA_WHATSAPP}
-            whatsappMessage="Olá Catalina! Tenho uma pousada em Itamambuca e gostaria de aparecer no soyitafun."
+            whatsappMessage="Olá Catalina! Tenho uma pousada em Itamambuca e gostaria de aparecer no soy.ita.fan!"
           />
         )}
       </Section>
@@ -149,7 +149,7 @@ export default async function HomePage() {
             subtitle="Estamos curando lanchas, surf, cachoeiras e trilhas em Itamambuca. Fale com Catalina para fazer parte."
             ctaText="Falar com Catalina"
             whatsappNumber={CATA_WHATSAPP}
-            whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soyitafun."
+            whatsappMessage="Olá Catalina! Tenho uma atividade em Itamambuca e gostaria de aparecer no soy.ita.fan!"
           />
         )}
       </Section>
@@ -173,7 +173,7 @@ export default async function HomePage() {
             subtitle="Estamos curando os melhores comércios de Itamambuca. Fale com Catalina para fazer parte."
             ctaText="Falar com Catalina"
             whatsappNumber={CATA_WHATSAPP}
-            whatsappMessage="Olá Catalina! Tenho um comércio em Itamambuca e gostaria de aparecer no soyitafun."
+            whatsappMessage="Olá Catalina! Tenho um comércio em Itamambuca e gostaria de aparecer no soy.ita.fan!"
           />
         )}
       </Section>
@@ -197,7 +197,7 @@ export default async function HomePage() {
             subtitle="Estamos curando os melhores serviços de Itamambuca. Fale com Catalina para fazer parte."
             ctaText="Falar com Catalina"
             whatsappNumber={CATA_WHATSAPP}
-            whatsappMessage="Olá Catalina! Tenho um serviço em Itamambuca e gostaria de aparecer no soyitafun."
+            whatsappMessage="Olá Catalina! Tenho um serviço em Itamambuca e gostaria de aparecer no soy.ita.fan!"
           />
         )}
       </Section>
@@ -231,7 +231,7 @@ function Hero() {
           Portal de Itamambuca
         </p>
         <h1 className="font-display text-6xl md:text-8xl text-fondo-base mt-6 leading-none">
-          soyitafun
+          soy.ita.fan
         </h1>
         <p className="text-base md:text-lg text-fondo-base/90 mt-8 leading-relaxed max-w-xl mx-auto">
           110 praias, mata atlântica e cachoeiras escondidas no litoral norte de

@@ -10,11 +10,11 @@ import { Filters } from './filters'
 const CATA_WHATSAPP = '5512991560367'
 
 export const metadata: Metadata = {
-  title: 'Serviços em Itamambuca | soyitafun',
+  title: 'Serviços em Itamambuca — soy.ita.fan',
   description:
     'Transfer, chef, massagista, limpeza e aluguel de carro em Itamambuca, Ubatuba.',
   openGraph: {
-    title: 'Serviços em Itamambuca | soyitafun',
+    title: 'Serviços em Itamambuca — soy.ita.fan',
     description:
       'Transfer, chef, massagista, limpeza e aluguel de carro em Itamambuca, Ubatuba.',
     type: 'website',
@@ -70,7 +70,7 @@ export default async function ServicosListPage({
               subtitle="Estamos curando os melhores serviços de Itamambuca. Fale com Catalina para fazer parte."
               ctaText="Falar com Catalina"
               whatsappNumber={CATA_WHATSAPP}
-              whatsappMessage="Olá Catalina! Tenho um serviço em Itamambuca e gostaria de aparecer no soyitafun."
+              whatsappMessage="Olá Catalina! Tenho um serviço em Itamambuca e gostaria de aparecer no soy.ita.fan!"
             />
           )
         ) : (
