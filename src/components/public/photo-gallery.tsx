@@ -30,12 +30,12 @@ export function PhotoGallery({ photos, alt }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="aspect-[16/10] rounded-md overflow-hidden bg-fondo-card">
+      <div className="rounded-md overflow-hidden bg-fondo-card flex items-center justify-center min-h-[400px] max-h-[70vh]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={visible[active]}
           alt={alt}
-          className="w-full h-full object-cover"
+          className="w-auto h-auto max-w-full max-h-[70vh] object-contain"
         />
       </div>
 
