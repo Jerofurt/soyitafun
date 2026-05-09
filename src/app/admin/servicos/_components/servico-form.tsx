@@ -160,11 +160,16 @@ export function ServicoForm(props: Props) {
                 </Select>
               </Field>
 
-              <Field label="Descrição" htmlFor="descricao">
+              <Field
+                label="Descrição"
+                htmlFor="descricao"
+                hint="Explique brevemente o que inclui o serviço ou o que o torna especial. Aparece na página pública."
+              >
                 <textarea
                   id="descricao"
                   name="descricao"
                   rows={5}
+                  required
                   defaultValue={initial?.descricao ?? ''}
                   placeholder="O que inclui o serviço, atendimento, especialidades..."
                   className={cn(

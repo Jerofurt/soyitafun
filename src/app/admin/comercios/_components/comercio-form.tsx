@@ -165,11 +165,16 @@ export function ComercioForm(props: Props) {
                 </Select>
               </Field>
 
-              <Field label="Descrição" htmlFor="descricao">
+              <Field
+                label="Descrição"
+                htmlFor="descricao"
+                hint="O que tem de especial, o que vende ou serve, ambiente. Aparece na página pública."
+              >
                 <textarea
                   id="descricao"
                   name="descricao"
                   rows={5}
+                  required
                   defaultValue={initial?.descricao ?? ''}
                   placeholder="O que tem de especial, o que vende, o que serve, ambiente..."
                   className={cn(

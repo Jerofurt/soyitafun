@@ -178,11 +178,16 @@ export function HospedagemForm(props: Props) {
                 />
               </Field>
 
-              <Field label="Descrição" htmlFor="descricao">
+              <Field
+                label="Descrição"
+                htmlFor="descricao"
+                hint="Conte um pouco sobre a hospedagem, o entorno, o que torna especial. Aparece na página pública."
+              >
                 <textarea
                   id="descricao"
                   name="descricao"
                   rows={5}
+                  required
                   defaultValue={initial?.descricao ?? ''}
                   placeholder="Conte um pouco sobre a hospedagem, o entorno, o que torna especial..."
                   className={cn(

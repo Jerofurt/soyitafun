@@ -171,11 +171,16 @@ export function AtividadeForm(props: Props) {
                 </Select>
               </Field>
 
-              <Field label="Descrição" htmlFor="descricao">
+              <Field
+                label="Descrição"
+                htmlFor="descricao"
+                hint="O que inclui, ponto alto, o que levar, restrições. Aparece na página pública."
+              >
                 <textarea
                   id="descricao"
                   name="descricao"
                   rows={5}
+                  required
                   defaultValue={initial?.descricao ?? ''}
                   placeholder="O que inclui o passeio, ponto alto, o que levar, restrições..."
                   className={cn(
