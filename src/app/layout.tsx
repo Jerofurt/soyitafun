@@ -20,8 +20,19 @@ export const metadata: Metadata = {
   title: "soy.ita.fan — Portal de Itamambuca",
   description:
     "Hospedagens, atividades, comércios e serviços em Itamambuca, Ubatuba.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/favicon.svg",
+  },
   openGraph: {
-    images: ["/itamambuca-amanhecer.jpeg"],
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "soy.ita.fan — Portal de Itamambuca",
+      },
+    ],
   },
 };
 

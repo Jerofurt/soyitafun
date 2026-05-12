@@ -1,0 +1,29 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2C5F5D"/>
+      <stop offset="60%" stop-color="#3D6B68"/>
+      <stop offset="100%" stop-color="#C9A961"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g transform="translate(140 140)" fill="#FAF7F2" opacity="0.85">
+    <circle cx="50" cy="-25" r="22" fill="#C9A961" opacity="0.6"/>
+    <rect x="-3" y="-15" width="6" height="50" rx="3"/>
+    <path d="M 0 -15 Q -28 -35 -55 -22 Q -18 -16 -3 -12 Z"/>
+    <path d="M 0 -15 Q 28 -35 55 -22 Q 18 -16 3 -12 Z"/>
+    <path d="M 0 -15 Q -10 -45 12 -50 Q 3 -25 0 -15 Z"/>
+    <path d="M 0 -15 Q 10 -45 -12 -50 Q -3 -25 0 -15 Z"/>
+  </g>
+  <g transform="translate(1060 490)" fill="#FAF7F2" opacity="0.85">
+    <circle cx="-50" cy="-25" r="22" fill="#C9A961" opacity="0.6"/>
+    <rect x="-3" y="-15" width="6" height="50" rx="3"/>
+    <path d="M 0 -15 Q -28 -35 -55 -22 Q -18 -16 -3 -12 Z"/>
+    <path d="M 0 -15 Q 28 -35 55 -22 Q 18 -16 3 -12 Z"/>
+    <path d="M 0 -15 Q -10 -45 12 -50 Q 3 -25 0 -15 Z"/>
+    <path d="M 0 -15 Q 10 -45 -12 -50 Q -3 -25 0 -15 Z"/>
+  </g>
+  <text x="600" y="370" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="120" font-style="italic" fill="#FAF7F2" font-weight="400">soy.ita.fan</text>
+  <line x1="500" y1="420" x2="700" y2="420" stroke="#C9A961" stroke-width="2"/>
+  <text x="600" y="475" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" fill="#FAF7F2" letter-spacing="8" font-weight="300">PORTAL DE ITAMAMBUCA</text>
+</svg>

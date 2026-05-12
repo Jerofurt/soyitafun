@@ -31,7 +31,14 @@ export const metadata: Metadata = {
     title: 'soy.ita.fan — Portal de Itamambuca',
     description:
       '110 praias, mata atlântica e cachoeiras escondidas no litoral norte de São Paulo. Hospedagens curadas e atividades em Itamambuca, Ubatuba.',
-    images: ['/itamambuca-amanhecer.jpeg'],
+    images: [
+      {
+        url: '/og-image.svg',
+        width: 1200,
+        height: 630,
+        alt: 'soy.ita.fan — Portal de Itamambuca',
+      },
+    ],
     type: 'website',
     locale: 'pt_BR',
   },
